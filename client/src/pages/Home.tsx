@@ -9,8 +9,12 @@ import {
   ClipboardList,
   FileText,
   GraduationCap,
+  LockKeyhole,
+  MessageCircle,
   MoreHorizontal,
+  Phone,
   Plus,
+  Send,
   Sparkles,
   Users,
 } from "lucide-react";
@@ -39,6 +43,20 @@ const activities = [
 export default function Home({ onNavigate }: { onNavigate?: (key: string, label: string) => void }) {
   const [period, setPeriod] = useState("هذا الشهر");
   const [showAllTasks, setShowAllTasks] = useState(false);
+  const [messageChannel, setMessageChannel] = useState<"whatsapp" | "sms">("whatsapp");
+  const [messageRecipient, setMessageRecipient] = useState("");
+  const [messageText, setMessageText] = useState("السلام عليكم، نود تذكيركم بموعد اللقاء التربوي القادم. شكرًا لتعاونكم.");
+  const [demoMessages, setDemoMessages] = useState<string[]>([]);
+
+  const sendDemoMessage = () => {
+    if (!messageRecipient.trim()) {
+      toast.error("أدخل رقمًا للتجربة فقط");
+      return;
+    }
+    setDemoMessages((items) => [`${messageChannel === "whatsapp" ? "واتساب" : "SMS"} · ${messageRecipient}`, ...items].slice(0, 3));
+    toast.success("تمت محاكاة الإرسال بنجاح", { description: "وضع تجريبي — لم يتم إرسال رسالة حقيقية أو حفظ الرقم." });
+    setMessageRecipient("");
+  };
 
   return (
     <div className="px-5 pb-12 pt-7 sm:px-8 lg:px-10 lg:pt-9">
@@ -86,6 +104,32 @@ export default function Home({ onNavigate }: { onNavigate?: (key: string, label:
         <article className="panel-card p-6 sm:p-7"><div className="flex items-start justify-between"><div><div className="eyebrow">التقويم</div><h3 className="mt-1 text-[18px] font-black text-[#192c38]">هذا الأسبوع</h3></div><button onClick={() => onNavigate?.("calendar", "التقويم المدرسي")} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"><MoreHorizontal size={18} /></button></div><div className="mt-5 grid grid-cols-7 gap-1.5 text-center text-[10px] font-bold text-slate-400"><span>أحد</span><span>اثن</span><span>ثلا</span><span>أرب</span><span>خمي</span><span>جمع</span><span>سبت</span></div><div className="mt-2 grid grid-cols-7 gap-1.5 text-center">{[15, 16, 17, 18, 19, 20, 21].map((day, index) => <button onClick={() => toast.info(`مواعيد يوم ${day} سبتمبر`)} key={day} className={`calendar-day ${index === 2 ? "selected" : ""} ${index === 4 ? "has-event" : ""}`}><span>{day}</span>{index === 2 && <small>اليوم</small>}</button>)}</div><div className="mt-5 border-t border-slate-100 pt-4"><div className="flex items-center gap-3"><div className="rounded-xl bg-[#f8e8e8] p-2.5 text-[#b85e69]"><CalendarDays size={16} /></div><div><div className="text-[11px] font-bold text-[#2a3b45]">اجتماع لجنة التوجيه</div><div className="mt-1 text-[10px] text-slate-400">الثلاثاء، 10:00 صباحًا</div></div><span className="mr-auto h-2 w-2 rounded-full bg-[#b85e69]" /></div></div></article>
 
         <article className="panel-card overflow-hidden"><div className="flex items-start justify-between px-6 pb-2 pt-6 sm:px-7"><div><div className="eyebrow">آخر المستجدات</div><h3 className="mt-1 text-[18px] font-black text-[#192c38]">نشاط فريق المدرسة</h3></div><button onClick={() => toast.info("سجل التدقيق الكامل قيد التجهيز")} className="text-[11px] font-bold text-[#a94d5b] hover:underline">سجل التدقيق</button></div><div className="divide-y divide-slate-100 px-6 pb-2 pt-3 sm:px-7">{activities.map((activity) => <div key={activity.name} className="flex items-center gap-3 py-3.5"><div className="avatar" style={{ backgroundColor: activity.color }}>{activity.initials}</div><div className="min-w-0 flex-1"><div className="text-[12px] text-[#31424c]"><strong className="font-bold">{activity.name}</strong> <span className="text-slate-500">{activity.action}</span></div><div className="mt-1 text-[10px] text-slate-400">{activity.time}</div></div><button onClick={() => toast.info("تفاصيل النشاط قيد التجهيز")} className="rounded-lg p-2 text-slate-300 transition hover:bg-slate-100 hover:text-slate-600"><ChevronLeft size={15} /></button></div>)}</div><div className="mx-6 mb-5 rounded-xl bg-[#f5f8fa] px-4 py-3 text-[11px] text-slate-500 sm:mx-7"><span className="font-bold text-[#273b47]">ملاحظة:</span> لديك 3 تحديثات جديدة تحتاج اعتمادك اليوم.</div></article>
+      </section>
+
+      <section id="messages-demo" className="panel-card mt-6 scroll-mt-24 overflow-hidden">
+        <div className="flex flex-col justify-between gap-5 border-b border-slate-100 px-6 pb-5 pt-6 sm:flex-row sm:items-start sm:px-7">
+          <div><div className="eyebrow">مركز التواصل</div><h3 className="mt-1 text-[18px] font-black text-[#192c38]">رسائل واتساب وSMS</h3><p className="mt-1 text-[11px] text-slate-400">جرّب رحلة الإرسال الآن. عند التفعيل، ستتصل القنوات بحساباتك الرسمية.</p></div>
+          <div className="inline-flex items-center gap-2 self-start rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-bold text-amber-700"><LockKeyhole size={12} /> وضع تجريبي آمن</div>
+        </div>
+        <div className="grid gap-6 px-6 py-6 sm:px-7 lg:grid-cols-[1.08fr_.92fr]">
+          <div>
+            <div className="mb-4 grid grid-cols-2 gap-2 rounded-xl bg-slate-50 p-1.5">
+              <button onClick={() => setMessageChannel("whatsapp")} className={`flex items-center justify-center gap-2 rounded-lg py-2.5 text-[11px] font-bold transition ${messageChannel === "whatsapp" ? "bg-white text-[#268c68] shadow-sm" : "text-slate-400 hover:text-slate-600"}`}><MessageCircle size={15} /> واتساب</button>
+              <button onClick={() => setMessageChannel("sms")} className={`flex items-center justify-center gap-2 rounded-lg py-2.5 text-[11px] font-bold transition ${messageChannel === "sms" ? "bg-white text-[#527f9b] shadow-sm" : "text-slate-400 hover:text-slate-600"}`}><Phone size={15} /> رسالة نصية</button>
+            </div>
+            <label className="mb-1.5 block text-[11px] font-bold text-slate-600">رقم المستلم <span className="font-normal text-slate-400">(للتجربة فقط، لا يُحفظ)</span></label>
+            <input value={messageRecipient} onChange={(event) => setMessageRecipient(event.target.value)} placeholder="+966 5X XXX XXXX" dir="ltr" className="mb-4 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm outline-none transition placeholder:text-slate-300 focus:border-[#b85e69] focus:ring-4 focus:ring-[#b85e69]/10" />
+            <label className="mb-1.5 block text-[11px] font-bold text-slate-600">نص الرسالة</label>
+            <textarea value={messageText} onChange={(event) => setMessageText(event.target.value)} rows={3} className="w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-[12px] leading-6 outline-none transition focus:border-[#b85e69] focus:ring-4 focus:ring-[#b85e69]/10" />
+            <div className="mt-4 flex items-center justify-between gap-3"><span className="text-[10px] text-slate-400">{messageText.length}/500 حرف</span><Button onClick={sendDemoMessage} className="gap-2 rounded-xl bg-[#a94d5b] px-5 text-xs font-bold text-white shadow-md shadow-[#a94d5b]/20 hover:bg-[#913e4d]"><Send size={14} /> محاكاة الإرسال</Button></div>
+          </div>
+          <div className="rounded-2xl bg-[#f7fafb] p-5">
+            <div className="flex items-center justify-between"><div className="flex items-center gap-2"><div className={`rounded-xl p-2.5 ${messageChannel === "whatsapp" ? "bg-[#dff3e9] text-[#268c68]" : "bg-[#e5f0f6] text-[#527f9b]"}`}>{messageChannel === "whatsapp" ? <MessageCircle size={17} /> : <Phone size={17} />}</div><div><div className="text-[12px] font-black text-[#2a3b45]">معاينة الرسالة</div><div className="mt-0.5 text-[10px] text-slate-400">{messageChannel === "whatsapp" ? "WhatsApp Business" : "Unifonic SMS"}</div></div></div><span className="status-dot bg-emerald-500" /></div>
+            <div className={`message-bubble mt-5 ${messageChannel === "whatsapp" ? "whatsapp-bubble" : "sms-bubble"}`}><div className="mb-2 text-[10px] font-bold text-slate-400">إلى: {messageRecipient || "رقم تجريبي"}</div><p className="text-[12px] leading-6 text-[#31424c]">{messageText || "اكتب رسالتك هنا..."}</p><div className="mt-3 text-left text-[9px] text-slate-400">الآن · وضع تجريبي</div></div>
+            <div className="mt-5 flex items-start gap-2 text-[10px] leading-5 text-slate-400"><LockKeyhole size={13} className="mt-0.5 shrink-0 text-[#b2834d]" /> لن يتم حفظ رقم المستلم أو إرسال أي رسالة حقيقية حتى تفعيل مفاتيح القنوات الرسمية.</div>
+            {demoMessages.length > 0 && <div className="mt-4 border-t border-slate-200 pt-3"><div className="mb-2 text-[10px] font-bold text-slate-500">آخر المحاكاة</div>{demoMessages.map((item) => <div key={item} className="flex items-center gap-2 py-1 text-[10px] text-emerald-700"><span className="grid h-4 w-4 place-items-center rounded-full bg-emerald-100"><Check size={10} /></span>{item}</div>)}</div>}
+          </div>
+        </div>
       </section>
 
       <footer className="mt-9 flex flex-col items-center justify-between gap-3 border-t border-slate-200/70 pt-5 text-[10px] text-slate-400 sm:flex-row"><span>© 2025 مِكلاف · منصة إدارة المدرسة بوضوح وأثر</span><span className="inline-flex items-center gap-1.5"><span className="status-dot bg-emerald-500" /> بياناتك محمية ومشفرة</span></footer>

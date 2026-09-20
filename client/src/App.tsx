@@ -76,6 +76,10 @@ function App() {
   const handleNavigation = (key: string, label: string) => {
     setActive(key);
     setSidebarOpen(false);
+    if (key === "messages") {
+      window.setTimeout(() => document.getElementById("messages-demo")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+      return;
+    }
     if (key !== "dashboard") toast.info(`قسم ${label} قيد التجهيز`, { description: "ستظهر لك تفاصيله بعد ربط قاعدة البيانات." });
   };
 
