@@ -90,7 +90,7 @@ function App() {
               <div className="flex items-center gap-3">
                 <div className="brand-mark"><span>ذ</span></div>
                 <div>
-                  <div className="text-[21px] font-black tracking-tight">الذات</div>
+                  <div className="text-[21px] font-black tracking-tight">مِكلاف</div>
                   <div className="mt-0.5 text-[10px] font-medium tracking-[0.18em] text-slate-300/75">منصة إدارة المدرسة</div>
                 </div>
               </div>
