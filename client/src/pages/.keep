@@ -1,0 +1,2 @@
+import { SchoolSettingsPage } from "./pages/SchoolSettingsPage";
+// ... existing imports remain unchanged
