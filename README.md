@@ -1,61 +1,38 @@
-# مِكلاف — منصة إدارة المدرسة المستقلة
+# مِكلاف — منصة إدارة المدرسة
 
-## المتطلبات
+## النسخة الجاهزة للعمل
 
-- Node.js 20+
-- pnpm
-- حساب Supabase مع مشروع جاهز
+الواجهة الآن عربية RTL، وتحتوي ع��ى لوحة المتابعة، الطلاب، الإرشاد، التقويم، الخطة التشغيلية، الرسائل، التقارير، الصلاحيات، إعدادات النظام، وبيانات المدرسة القابلة للتعديل.
 
 ## التشغيل
 
-1. انسخ الملف `.env.example` إلى `.env` ثم ضع قيمتك الحقيقية:
+1. ثبّت Node.js 20+ وpnpm.
+2. أنشئ ملف `.env` من `.env.example` وأضف:
 
-   ```bash
-   cp .env.example .env
-   ```
+```env
+VITE_SUPABASE_URL=https://xxxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_APP_NAME=Miklaf
+```
 
-2. أضف قيم:
+3. نفّذ بالترتيب داخل Supabase:
+   - `supabase/migrations/001_initial.sql`
+   - `supabase/migrations/002_school_settings.sql`
+4. شغّل:
 
-   ```env
-   VITE_SUPABASE_URL=https://xxxxx.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key
-   VITE_APP_NAME=Miklaf
-   ```
+```bash
+pnpm install
+pnpm check
+pnpm build
+pnpm dev
+```
 
-3. أنشئ قاعدة البيانات في Supabase ثم قم بتشغيل ملف migration:
+## المزايا
 
-   ```sql
-   supabase/migrations/001_initial.sql
-   ```
+- تسجيل الدخول وإنشاء الحساب عبر Supabase Auth.
+- تعديل وحفظ بيانات المدرسة من القائمة: **بيانات المدرسة**.
+- حماية الصفوف بسياسات RLS.
+- تصميم عربي متجاوب مع خط Tajawal وهوية أخضر فيروزي.
+- صفحات تشغيل المدرسة الأساسية مرتبة داخل لوحة واحدة.
 
-4. ثبّت الحزم:
-
-   ```bash
-   pnpm install
-   ```
-
-5. شغّل المشروع:
-
-   ```bash
-   pnpm dev
-   ```
-
-6. لبناء المشروع للإنتاج:
-
-   ```bash
-   pnpm build
-   ```
-
-## ملاحظات مهمة
-
-- تم إزالة الاعتماد على إعدادات Lovable / Manus من `vite.config.ts`.
-- نظام تسجيل الدخول/التسجيل مبني على Supabase Auth REST API عبر البريد وكلمة المرور.
-- حماية الوصول داخل قاعدة البيانات مفعلة عبر RLS.
-- لوحة التحكم محمية وتمنع الدخول بدون جلسة موجودة.
-
-## هيكل المشروع
-
-- `client/src/App.tsx` — تسجيل الدخول، إنشاء الحساب، إدارة الجلسة، لوحة التحكم.
-- `client/src/lib/supabase.ts` — وظائف المصادقة عبر REST.
-- `supabase/migrations/001_initial.sql` — مخطط قاعدة البيانات الكامل.
-- `client/src/pages/*.tsx` — صفحات المدرسة: الطلاب، التقويم، الخطة، الرسائل، التقارير، الإعدادات، الصلاحيات.
+> ملاحظة: بيانات الطلاب والتقويم والرسائل المعروضة في الصفحات الحالية بيانات تشغيلية تجريبية. ربطها بقاعدة البيانات يحتاج إضافة عمليات CRUD لكل جدول حسب سياسة المدرسة.

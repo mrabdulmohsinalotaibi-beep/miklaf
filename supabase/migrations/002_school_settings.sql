@@ -21,21 +21,18 @@ begin
 end;
 $$;
 
+drop trigger if exists school_settings_set_updated_at on public.school_settings;
 create trigger school_settings_set_updated_at
 before update on public.school_settings
 for each row execute procedure public.school_settings_set_updated_at();
 
 alter table public.school_settings enable row level security;
-create policy "school_settings_authenticated_read"
-on public.school_settings for select
-using (auth.role() = 'authenticated');
-create policy "school_settings_authenticated_write"
-on public.school_settings for insert
-with check (auth.role() = 'authenticated');
-create policy "school_settings_authenticated_update"
-on public.school_settings for update
-using (auth.role() = 'authenticated')
-with check (auth.role() = 'authenticated');
+drop policy if exists "school_settings_authenticated_read" on public.school_settings;
+drop policy if exists "school_settings_authenticated_write" on public.school_settings;
+drop policy if exists "school_settings_authenticated_update" on public.school_settings;
+create policy "school_settings_authenticated_read" on public.school_settings for select using (auth.role() = 'authenticated');
+create policy "school_settings_authenticated_write" on public.school_settings for insert with check (auth.role() = 'authenticated');
+create policy "school_settings_authenticated_update" on public.school_settings for update using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
 insert into public.school_settings (id, school_name, school_code, education_type, city, principal_name)
 values ('default-school', 'الثانوية النموذجية', 'SCH-001', 'التعليم العام', 'الرياض', 'محمد العتيبي')
