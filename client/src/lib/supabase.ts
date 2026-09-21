@@ -113,3 +113,40 @@ export async function saveSchoolSettings(accessToken: string, settings: SchoolSe
   });
   return rows?.[0] ?? settings;
 }
+
+export type CounselorRecord = {
+  id: string;
+  module_key: string;
+  title: string;
+  student_id?: string | null;
+  data: Record<string, string>;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export async function getCounselorRecords(accessToken: string, moduleKey: string) {
+  return rest<CounselorRecord[]>(`counselor_records?select=*&module_key=eq.${encodeURIComponent(moduleKey)}&order=created_at.desc`, accessToken);
+}
+
+export async function createCounselorRecord(accessToken: string, moduleKey: string, title: string, data: Record<string, string>, studentId?: string) {
+  const rows = await rest<CounselorRecord[]>("counselor_records", accessToken, {
+    method: "POST",
+    headers: { Prefer: "return=representation" },
+    body: JSON.stringify({ module_key: moduleKey, title, data, student_id: studentId || null }),
+  });
+  return rows?.[0];
+}
+
+export async function updateCounselorRecord(accessToken: string, id: string, title: string, data: Record<string, string>, studentId?: string) {
+  const rows = await rest<CounselorRecord[]>(`counselor_records?id=eq.${encodeURIComponent(id)}`, accessToken, {
+    method: "PATCH",
+    headers: { Prefer: "return=representation" },
+    body: JSON.stringify({ title, data, student_id: studentId || null }),
+  });
+  return rows?.[0];
+}
+
+export async function deleteCounselorRecord(accessToken: string, id: string) {
+  await rest<null>(`counselor_records?id=eq.${encodeURIComponent(id)}`, accessToken, { method: "DELETE" });
+}

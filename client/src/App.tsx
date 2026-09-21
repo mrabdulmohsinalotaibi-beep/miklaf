@@ -4,19 +4,20 @@ import {
   LayoutDashboard, LifeBuoy, LogOut, Menu, MessageSquareText, Search,
   Settings, ShieldCheck, Users, X,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { getStoredSession, persistSession, signInWithPassword, signOut, signUpWithEmail, type AuthSession } from "@/lib/supabase";
-import { DashboardPage } from "./pages/DashboardPage";
-import { StudentsPage } from "./pages/StudentsPage";
-import { CounselingPage } from "./pages/CounselingPage";
-import { CalendarPage } from "./pages/CalendarPage";
-import { PlanPage } from "./pages/PlanPage";
-import { MessagesPage } from "./pages/MessagesPage";
-import { ReportsPage } from "./pages/ReportsPage";
-import { PermissionsPage } from "./pages/PermissionsPage";
+import DashboardPage from "./pages/DashboardPage";
+import StudentsPage from "./pages/StudentsPage";
+import CounselingPage from "./pages/CounselingPage";
+import CalendarPage from "./pages/CalendarPage";
+import PlanPage from "./pages/PlanPage";
+import MessagesPage from "./pages/MessagesPage";
+import ReportsPage from "./pages/ReportsPage";
+import PermissionsPage from "./pages/PermissionsPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { SchoolSettingsPage } from "./pages/SchoolSettingsPage";
 
@@ -24,7 +25,7 @@ export type ViewName = "dashboard" | "calendar" | "students" | "counseling" | "m
 type AuthMode = "login" | "register";
 type UserRecord = { name: string; title: string };
 
-const navGroups = [
+const navGroups: { title: string; items: { label: string; icon: LucideIcon; key: ViewName }[] }[] = [
   { title: "نظرة عامة", items: [{ label: "لوحة المتابعة", icon: LayoutDashboard, key: "dashboard" as const }, { label: "التقويم المدرسي", icon: CalendarDays, key: "calendar" as const }] },
   { title: "المجتمع المدرسي", items: [{ label: "سجل الطلاب", icon: Users, key: "students" as const }, { label: "الإرشاد الطلابي", icon: LifeBuoy, key: "counseling" as const }, { label: "التواصل والرسائل", icon: MessageSquareText, key: "messages" as const }] },
   { title: "التشغيل والتوثيق", items: [{ label: "الخطة التشغيلية", icon: ClipboardCheck, key: "plan" as const }, { label: "التقارير", icon: FileText, key: "reports" as const }, { label: "الصلاحيات والأدوار", icon: ShieldCheck, key: "permissions" as const }, { label: "بيانات المدرسة", icon: Building2, key: "school-settings" as const }, { label: "الإعدادات", icon: Settings, key: "settings" as const }] },
